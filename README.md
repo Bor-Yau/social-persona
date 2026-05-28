@@ -1,6 +1,10 @@
 # Social Persona Engine (AI 网友模拟器)
 
 <p align="center">
+  <img src="assets/logo.png" alt="Logo" width="200">
+</p>
+
+<p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License"></a>
   <a href="#"><img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Python"></a>
   <a href="#"><img src="https://img.shields.io/badge/java-21+-orange.svg" alt="Java"></a>
@@ -55,6 +59,8 @@ A **relationship-state-driven** AI social simulation system. Not a chatbot — a
 ```
 
 ### Interaction Flow
+
+![Architecture](assets/architecture.png)
 
 1. **Persona Creation** — Open the web admin panel → two options: Matchmaker (7-stage conversational interview) or Manual Create (form with all parameters) → persona profile confirmed → persona deployed
 2. **Daily Chat** — User sends QQ message → NapCat forwards to Java via WebSocket → Java calls Python for LLM response → Python queries mem0 for relevant memories → generates reply with split markers → Java simulates typing delay → sends via QQ
@@ -198,7 +204,7 @@ Image generation runs in two modes:
 - **Sync**: Blocking — generates image first, then sends (used for proactive messages)
 - **Async** (planned): Non-blocking — sends a stalling text first, generates in background
 
-> **Note:** The admin panel UI defaults to Chinese. Select your preferred language on first visit (a popup will appear), or change it later in Settings. The admin panel fully supports both English and Chinese.
+> **Note:** The admin panel UI defaults to Chinese. Select your preferred language on first visit (a popup will appear), or change it later in Settings. English translations are available for the entire panel.
 
 ## Documentation
 

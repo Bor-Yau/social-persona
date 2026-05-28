@@ -25,6 +25,10 @@ python-core/data/logs/
 # ML 模型文件（首次启动时通过 HuggingFace Hub 自动下载，见 README 指引）
 python-core/data/models/
 
+# ChromaDB 向量数据库 + mem0 历史（运行时自动生成）
+python-core/data/chromadb/
+python-core/data/mem0_history.db
+
 # Redis 二进制文件（仅保留 .conf 配置文件）
 redis/*.exe
 redis/*.dll
