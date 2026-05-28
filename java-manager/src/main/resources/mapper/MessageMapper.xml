@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    消息表自定义 SQL 映射 —— 三级自适应扫描的查询层
+
+    ★ 三条核心查询对应 MessageScanScheduler 的三个扫描等级：
+      countInNextHour       → IDLE → MINUTE_WATCH 的触发条件
+      countInCurrentMinute  → MINUTE_WATCH → SECOND_WATCH 的触发条件
+      findDueThisSecond     → SECOND_WATCH 取到期消息
+
+    ★ 使用索引：idx_scheduled_msgs_scan(persona_id, is_sent, scheduled_time)
+-->
+<mapper namespace="com.socialpersona.message.repository.MessageMapper">
+
+    <!--
+        countInNextHour：统计下一小时内待发消息数
+
+        ★ 用途：IDLE 扫描器每小时执行一次，发现有消息 → 降级到 MINUTE_WATCH
+        ★ 参数：now（当前时间），nowPlusOneHour（当前+1小时）
+    -->
+    <select id="countInNextHour" resultType="int">
+        SELECT COUNT(*)
+        FROM scheduled_messages
+        WHERE persona_id = #{personaId}
+          AND is_sent = 0
+          AND (
+              (scheduled_time >= #{nowTime} AND scheduled_time &lt;= #{oneHourLater})
+              OR
+              (#{oneHourLater} &lt; #{nowTime}
+               AND (scheduled_time >= #{nowTime} OR scheduled_time &lt;= #{oneHourLater}))
+          )
+    </select>
+
+    <!--
+        countInCurrentMinute：统计当前分钟内待发消息数
+
+        ★ 用途：MINUTE_WATCH 扫描器每分钟执行，发现有消息 → 降级到 SECOND_WATCH
+    -->
+    <select id="countInCurrentMinute" resultType="int">
+        SELECT COUNT(*)
+        FROM scheduled_messages
+        WHERE persona_id = #{personaId}
+          AND is_sent = 0
+          AND scheduled_time BETWEEN #{minuteStart} AND #{minuteEnd}
+    </select>
+
+    <!--
+        findDueThisSecond：取当前秒到期的消息
+
+        ★ 用途：SECOND_WATCH 扫描器每秒执行，取本秒内到期的消息发送
+        ★ 排序：scheduled_time ASC → 先到期的先发
+        ★ 为什么不用 BETWEEN 当前秒和+1秒：
+          有可能上一轮扫描耗时长导致错过了一条消息。
+          用 scheduled_time <= now AND > oneSecondAgo 覆盖"刚刚应该发但还没发"的消息。
+    -->
+    <select id="findDueThisSecond" resultType="com.socialpersona.message.entity.ScheduledMessage">
+        SELECT *
+        FROM scheduled_messages
+        WHERE persona_id = #{personaId}
+          AND is_sent = 0
+          AND scheduled_time &lt;= #{nowTime}
+          AND scheduled_time &gt; #{oneSecondAgo}
+        ORDER BY scheduled_time ASC
+    </select>
+
+</mapper>

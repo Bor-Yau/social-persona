@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #f9faf7;
+    background-image:
+      linear-gradient(rgba(45, 106, 79, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45, 106, 79, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: -1px -1px;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+}
+
+@keyframes gridPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 毛玻璃卡片 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(45, 106, 79, 0.12);
+  box-shadow: 0 4px 24px rgba(27, 67, 50, 0.06),
+              0 1px 3px rgba(27, 67, 50, 0.04);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(45, 106, 79, 0.22);
+  box-shadow: 0 8px 32px rgba(27, 67, 50, 0.10),
+              0 2px 6px rgba(27, 67, 50, 0.06);
+  transform: translateY(-2px);
+}
+
+/* 重点毛玻璃面板（创建页聊天区） */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(45, 106, 79, 0.15);
+  box-shadow: 0 8px 40px rgba(27, 67, 50, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 翡翠按钮 */
+.btn-jade {
+  background: linear-gradient(135deg, #40916c, #2d6a4f);
+  color: white;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.625rem 1.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(45, 106, 79, 0.25);
+  letter-spacing: 0.02em;
+}
+
+.btn-jade:hover {
+  background: linear-gradient(135deg, #52b788, #40916c);
+  box-shadow: 0 4px 20px rgba(45, 106, 79, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-jade:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 6px rgba(45, 106, 79, 0.2);
+}
+
+/* 聊天气泡 */
+.chat-bubble-user {
+  background: linear-gradient(135deg, #2d6a4f, #1b4332);
+  color: #e8f5ef;
+  border-radius: 20px 20px 4px 20px;
+}
+
+.chat-bubble-matchmaker {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(45, 106, 79, 0.12);
+  color: #1a1a2e;
+  border-radius: 20px 20px 20px 4px;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 106, 79, 0.18);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 106, 79, 0.3);
+}
+
+/* Toast 滑入动画 */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-toast-in {
+  animation: toastIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 页面切换淡入动画 */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-fade {
+  animation: pageFadeIn 0.3s ease-out forwards;
+}
+
+/* 对勾弹出庆祝动画 */
+@keyframes checkPop {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) rotate(5deg);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-check-pop {
+  animation: checkPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 装饰性浮动数据点 */
+.data-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(45, 106, 79, 0.12);
+  pointer-events: none;
+  z-index: 0;
+}

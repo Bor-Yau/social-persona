@@ -1,0 +1,12 @@
+{
+  "provider": "deepseek",
+  "apiKeyEncrypted": "请将您的API Key做Base64编码后填入此处",
+  "baseUrl": "https://api.deepseek.com/v1",
+  "model": "deepseek-chat",
+  "qq": "请填入您的QQ号",
+  "imageProvider": "",
+  "imageApiKeyEncrypted": "",
+  "imageBaseUrl": "",
+  "imageModel": "",
+  "masterKeyHash": "首次启动时自动生成"
+}

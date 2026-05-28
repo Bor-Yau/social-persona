@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:sqlite:target/test-social-persona.db
+    driver-class-name: org.sqlite.JDBC
+    schema-enabled: true
+  cache:
+    type: none
+  data:
+    redis:
+      enabled: false
+
+mybatis-plus:
+  type-aliases-package: com.socialpersona.*.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    database-id: sqlite
+
+python:
+  core:
+    url: http://127.0.0.1:8000
+
+app:
+  image-dir: target/test-generated_images
+
+logging:
+  level:
+    com.socialpersona: DEBUG
+    org.springframework: WARN

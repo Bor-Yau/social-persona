@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 日志输出目录 -->
+    <property name="LOG_DIR" value="data/logs"/>
+    <property name="LOG_FILE" value="${LOG_DIR}/java.log"/>
+    <property name="LOG_ARCHIVE" value="${LOG_DIR}/java.%i.log.gz"/>
+
+    <!-- 控制台输出（保留，方便 IDE 中实时查看） -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出：按 10MB 滚动，最多保留 5 个历史文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_ARCHIVE}</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 业务模块：DEBUG -->
+    <logger name="com.socialpersona" level="DEBUG"/>
+
+    <!-- MyBatis / MyBatis-Plus：压制 SQL 日志到 INFO，报错时 ERROR 仍可见 -->
+    <logger name="com.baomidou.mybatisplus" level="INFO"/>
+    <logger name="org.mybatis" level="INFO"/>
+    <logger name="org.apache.ibatis" level="INFO"/>
+    <logger name="com.socialpersona.persona.repository" level="INFO"/>
+    <logger name="com.socialpersona.event.repository" level="INFO"/>
+    <logger name="com.socialpersona.message.repository" level="INFO"/>
+    <logger name="com.socialpersona.relationship.repository" level="INFO"/>
+
+    <!-- Spring 框架：INFO -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache.catalina" level="INFO"/>
+
+    <!-- 根日志器：INFO，输出到文件 + 控制台 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

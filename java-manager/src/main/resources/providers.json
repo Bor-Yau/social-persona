@@ -1,0 +1,92 @@
+{
+  "providers": [
+    {
+      "id": "deepseek",
+      "type": "chat",
+      "name": "DeepSeek",
+      "desc": "国产高性价比，中文理解强",
+      "default_url": "https://api.deepseek.com/v1",
+      "models_url": "https://api.deepseek.com/v1/models",
+      "auth_type": "bearer",
+      "api_format": "openai",
+      "models": [
+        {"id": "deepseek-chat", "name": "DeepSeek Chat", "desc": "旗舰模型"},
+        {"id": "deepseek-reasoner", "name": "DeepSeek Reasoner", "desc": "深度推理"}
+      ]
+    },
+    {
+      "id": "openai",
+      "type": "chat",
+      "name": "OpenAI",
+      "desc": "全球领先，生态丰富",
+      "default_url": "https://api.openai.com/v1",
+      "models_url": "https://api.openai.com/v1/models",
+      "auth_type": "bearer",
+      "api_format": "openai",
+      "models": [
+        {"id": "gpt-4o", "name": "GPT-4o", "desc": "多模态旗舰"},
+        {"id": "gpt-4o-mini", "name": "GPT-4o Mini", "desc": "轻量高性价比"}
+      ]
+    },
+    {
+      "id": "anthropic",
+      "type": "chat",
+      "name": "Anthropic",
+      "desc": "Claude 系列，安全对齐",
+      "default_url": "https://api.anthropic.com/v1",
+      "models_url": "https://api.anthropic.com/v1/models",
+      "auth_type": "x-api-key",
+      "api_format": "anthropic",
+      "models": [
+        {"id": "claude-sonnet-4-20250514", "name": "Claude Sonnet 4", "desc": "最新旗舰"}
+      ]
+    },
+    {
+      "id": "custom",
+      "type": "chat",
+      "name": "自定义",
+      "desc": "兼容 OpenAI 格式的其他服务",
+      "default_url": "",
+      "models_url": null,
+      "auth_type": "bearer",
+      "api_format": "openai",
+      "models": []
+    },
+    {
+      "id": "openai_image",
+      "type": "image",
+      "name": "OpenAI DALL-E",
+      "desc": "DALL-E 图片生成",
+      "default_url": "https://api.openai.com/v1",
+      "models_url": "https://api.openai.com/v1/models",
+      "auth_type": "bearer",
+      "api_format": "openai_image",
+      "models": [
+        {"id": "dall-e-3", "name": "DALL-E 3", "desc": "最新旗舰"},
+        {"id": "dall-e-2", "name": "DALL-E 2", "desc": "经典模型"}
+      ]
+    },
+    {
+      "id": "volcengine_image",
+      "type": "image",
+      "name": "火山引擎 Seedream",
+      "desc": "豆包Seedream系列生图",
+      "default_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "models_url": null,
+      "auth_type": "bearer",
+      "api_format": "openai_image",
+      "models": []
+    },
+    {
+      "id": "custom_image",
+      "type": "image",
+      "name": "自定义图片服务",
+      "desc": "兼容 OpenAI 图片格式的其他服务",
+      "default_url": "",
+      "models_url": null,
+      "auth_type": "bearer",
+      "api_format": "openai_image",
+      "models": []
+    }
+  ]
+}

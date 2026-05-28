@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    事件表自定义 SQL 映射
+
+    ★ 为什么需要 XML：
+      这 3 条查询的 WHERE 条件涉及多字段组合 + 排序 + LIMIT，
+      BaseMapper 的 LambdaQueryWrapper 写起来较长且可读性不如原生 SQL。
+      SQLite 直接看到完整 SQL 也能做更好的执行计划优化。
+-->
+<mapper namespace="com.socialpersona.event.repository.EventMapper">
+
+    <!--
+        findDue：找今天到期的活跃事件
+
+        查询逻辑：
+          1. WHERE is_active=1（未作废）
+          2. AND event_time <= now（当前时间已超过事件时间）
+          3. AND event_date = today（只查今天）
+          4. ORDER BY event_time ASC（先到期的先处理）
+
+        使用索引：idx_daily_events_scan(persona_id, event_date, is_active, event_time)
+    -->
+    <select id="findDue" resultType="com.socialpersona.event.entity.DailyEvent">
+        SELECT *
+        FROM daily_events
+        WHERE persona_id = #{personaId}
+          AND event_date = #{today}
+          AND is_active = 1
+          AND event_time &lt;= #{nowTime}
+        ORDER BY event_time ASC
+    </select>
+
+    <!--
+        findNextActive：查下一个活跃事件
+
+        ★ 用途：EventTriggerScheduler 调 Python 时传给 LLM，
+              让 LLM 知道 "距离下个事件还有多久"，从而规划 interval_pre_scheduling
+
+        查询逻辑：
+          1. WHERE is_active=1
+          2. AND event_time > currentTime（严格大于：不包含当前时刻）
+          3. LIMIT 1（只取最近的下一个）
+    -->
+    <select id="findNextActive" resultType="com.socialpersona.event.entity.DailyEvent">
+        SELECT *
+        FROM daily_events
+        WHERE persona_id = #{personaId}
+          AND event_date = #{today}
+          AND is_active = 1
+          AND event_time &gt; #{currentTime}
+        ORDER BY event_time ASC
+        LIMIT 1
+    </select>
+
+    <!--
+        invalidateAfter：作废指定时间之后的活跃事件
+
+        ★ 用途：AI 修改事件线（如 sleep 延后 / 取消未来计划）
+
+        ★ 为什么用 UPDATE 而非逐条改：
+          批量操作——可能一次作废多条事件（如 AI 决定 "后面的事都取消"）
+    -->
+    <update id="invalidateAfter">
+        UPDATE daily_events
+        SET is_active = 0,
+            updated_at = datetime('now')
+        WHERE persona_id = #{personaId}
+          AND event_date = #{today}
+          AND event_time &gt; #{afterTime}
+          AND is_active = 1
+    </update>
+
+    <!--
+        findAllToday：查今天所有未失效事件（前端事件线展示用）
+        不按 event_time 过滤，因为前端需要看到全天的事件（含未来的）
+    -->
+    <select id="findAllToday" resultType="com.socialpersona.event.entity.DailyEvent">
+        SELECT *
+        FROM daily_events
+        WHERE persona_id = #{personaId}
+          AND event_date = #{today}
+          AND is_active = 1
+        ORDER BY event_time ASC
+    </select>
+
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.7</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.socialpersona</groupId>
+    <artifactId>social-persona-manager</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Social Persona Manager</name>
+    <description>AI网友模拟器 Java管理端</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <spring-cloud.version>2023.0.4</spring-cloud.version>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <sqlite.version>3.45.3.0</sqlite.version>
+    </properties>
+
+    <!-- Spring Cloud BOM：统一管理 spring-cloud-starter-openfeign 版本 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Spring Boot Web：REST控制器 + 内嵌Tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Boot WebSocket：前端管理面板 + QQ OneBot 双通道 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- MyBatis-Plus：ORM框架，提供@TableName注解 + BaseMapper -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!-- SQLite JDBC驱动：轻量嵌入式数据库，零配置 -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>${sqlite.version}</version>
+        </dependency>
+
+        <!-- Spring Cloud OpenFeign：声明式HTTP客户端，调用Python FastAPI -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- Spring Cache + Redis：会话上下文缓存 + Persona热数据缓存 -->
+        <!-- 为什么加Redis：多AI并发时SQLite文件锁会导致查询延迟，
+             将高频读取的Persona配置/RelationshipState/对话历史放入Redis，
+             Spring Cache抽象层自动管理缓存读写和降级 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!-- 测试：JUnit 5 + Mockito + Spring Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin：打包可执行jar -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- OpenAPI Generator：Day5用FastAPI的openapi.json自动生成Java DTO -->
+            <!-- skip=true —— openapi-generator 7.6.0 无法解析 Pydantic 嵌套 $ref，
+                 改用 @JsonProperty 注解手写 DTO（同包同名，自动覆盖） -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.6.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-python-dto</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.json</inputSpec>
+                            <generatorName>java</generatorName>
+                            <modelPackage>com.socialpersona.gateway.dto</modelPackage>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <openApiNullable>false</openApiNullable>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

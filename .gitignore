@@ -1,0 +1,51 @@
+# IDE
+.idea/
+*.iml
+
+# Java 编译产物
+java-manager/target/
+*.class
+*.jar
+
+# Python 虚拟环境
+python-core/.venv/
+python-core/__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node 依赖
+frontend/node_modules/
+
+# 前端构建产物
+frontend/dist/
+
+# Python 日志
+python-core/data/logs/
+
+# ML 模型文件（首次启动时通过 HuggingFace Hub 自动下载，见 README 指引）
+python-core/data/models/
+
+# Redis 二进制文件（仅保留 .conf 配置文件）
+redis/*.exe
+redis/*.dll
+redis/*.pdb
+
+# SQLite 工具二进制文件（通过官网下载，不应提交到仓库）
+java-manager/sqlite-tools/*.exe
+
+# 运行时数据（含敏感信息）
+java-manager/data/logs/
+java-manager/data/generated_images/
+*.db
+java-manager/data/system_config.json
+
+# NapCat QQ 客户端（独立下载，开源协议不允许直接再分发）
+napcat_v2/
+napcat_onekey.zip
+
+# Trae IDE 配置
+.trae/
+
+# 系统文件
+.DS_Store
+Thumbs.db

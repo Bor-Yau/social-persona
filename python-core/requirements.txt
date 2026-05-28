@@ -1,0 +1,35 @@
+# ============================================================
+# AI网友模拟器 Python 核心 — 依赖清单
+# ============================================================
+
+# Web 框架：异步 HTTP + 自动 OpenAPI 文档生成
+fastapi>=0.110,<1.0
+
+# ASGI 服务器：把 FastAPI 应用跑起来
+uvicorn[standard]>=0.27,<1.0
+
+# OpenAI Python SDK（支持 DeepSeek 换 base_url / Anthropic 兼容接口）
+openai>=1.30,<2.0
+
+# 数据校验（FastAPI 已自带，但 Maven openapi-generator 生成需要）
+pydantic>=2.5,<3.0
+
+# Mem0 记忆系统 —— 轻量级对话记忆层
+mem0ai>=0.1.0,<1.0
+
+# ChromaDB 向量数据库 —— Mem0 底层存储引擎
+# 注意：chromadb >=0.5.0 已从 Apache 2.0 变更为专有源码可用许可证。
+# 此处锁定最后一个 Apache 2.0 版本以确保开源合规。
+chromadb>=0.4.23,<0.5.0
+
+# Mem0 依赖的本地嵌入模型（无 GPU 时自动 fallback CPU）
+sentence-transformers>=2.5.0,<4.0
+
+# 异步 HTTP 客户端（用于调用外部服务）
+aiohttp>=3.9,<4.0
+
+# 异步文件操作（用于文件上传/下载）
+aiofiles>=23.0,<25.0
+
+# HTTP 请求（startup_check.py 中 raw 直连下载用到）
+requests>=2.28,<3.0

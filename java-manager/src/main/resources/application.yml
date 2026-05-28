@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: social-persona-manager
+
+  # SQLite 数据源配置
+  datasource:
+    url: jdbc:sqlite:./data/social_persona.db
+    driver-class-name: org.sqlite.JDBC
+    schema-enabled: true
+
+  # Redis 缓存配置（会话上下文 + Persona 热数据 + RelationshipState）
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      connect-timeout: 2s
+      # Redis 不可达时自动降级——直接走 DB，服务不崩溃
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  # Spring Cache 抽象配置
+  cache:
+    type: redis
+    redis:
+      # Persona 配置默认缓存 30 分钟（极少改动）
+      time-to-live: 30m
+      # 允许缓存 null 值（防止缓存穿透：大量查不存在 ID 打到 DB）
+      cache-null-values: true
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  # 实体类扫描：Persona、RelationshipState、DailyEvent 等
+  type-aliases-package: com.socialpersona.*.entity
+  # XML 映射文件路径：自定义 SQL（如 EventMapper.findDue）
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    # SQLite 兼容：允许 SQLite 和 MySQL 语法混用
+    database-id: sqlite
+
+# Python FastAPI 服务地址（Feign 调用目标）
+python:
+  core:
+    url: http://127.0.0.1:8000
+
+# 图片生成输出目录
+app:
+  image-dir: data/generated_images
+
+# 日志级别
+logging:
+  level:
+    com.socialpersona: DEBUG
+    org.springframework.web: INFO
