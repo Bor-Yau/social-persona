@@ -1,4 +1,4 @@
-# Social Persona Engine (AI 网友模拟器)
+# Social Persona Simulator (AI 网友模拟器)
 
 <p align="center">
   <img src="assets/logo.png" alt="Logo" width="200">
