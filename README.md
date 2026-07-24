@@ -11,6 +11,10 @@
   <a href="#"><img src="https://img.shields.io/badge/node-18+-green.svg" alt="Node"></a>
 </p>
 
+<p align="center">
+  <b>English | <a href="README_zh-CN.md">简体中文</a></b>
+</p>
+
 ---
 
 A **relationship-state-driven** AI social simulation system. Not a chatbot — an AI persona that lives inside your IM client, with its own personality, memories, motivations, and evolving feelings toward you.
